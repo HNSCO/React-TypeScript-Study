@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 class EventPractice extends Component{
     state = {
+        username: '',
         message: ''
     }
 
@@ -19,21 +20,33 @@ class EventPractice extends Component{
     // - 화살표 함수 형태로 메서드를 정의하면 constructor()에 바인딩해주지 않아도 된다 
     handleChange(e){ 
         this.setState({
-            message: e.target.value
+            [e.target.name]: e.target.value // 여러개의 state 중 해당하는 state를 동적으로 처리
         });
     }
 
     handleClick(){
-        alert(this.state.message);
+        alert(this.state.username + ': ' + this.state.message);
         this.setState({
+            username: '',
             message: ''
         });
+    }
+
+    handleKeyPress=(e)=>{ // 키보드 키 감지
+        if(e.key === 'Enter'){
+            this.handleClick();
+        }
     }
 
     render(){
         return (
             <div>
                 <h1>이벤트 연습</h1>
+                <input type="text" placeholder="사용자명" name="username"
+                value={this.state.username}
+                onChange={this.handleChange}
+                />
+
                 <input type="text" placeholder="아무거나" name="message"
                 // onChange={(e)=> { // e객체는 syntheticEvent, 네이티브 이벤트와 달리 이벤트가 끝나고 나면 초기화되어 정보를 참조할 수 없다
                 //     console.log(e);
@@ -41,15 +54,10 @@ class EventPractice extends Component{
                 // }
                 value={this.state.message}
                 onChange={this.handleChange}
+                onKeyPress={this.handleKeyPress} // 키보드 키 감지
                 />
 
-                <button onClick={()=> {
-                    alert(this.state.message);
-                    this.setState({
-                        message: ''
-                    });
-                }
-                }>확인</button>
+                <button onClick={this.handleClick}>확인</button>
             </div>
         );
     }
